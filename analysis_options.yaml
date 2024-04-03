@@ -1,0 +1,25 @@
+include: package:flutter_lints/flutter.yaml
+
+analyzer:
+  exclude:
+    - "**/*.g.dart"
+    - "**/*.gr.dart"
+    - "**/*.freezed.dart"
+    - "**/app_localizations_en.dart"
+  errors:
+    unnecessary_non_null_assertion: ignore
+    deprecated_member_use: ignore
+    invalid_annotation_target: ignore
+    missing_required_param: error
+    include_file_not_found: ignore
+    use_super_parameters: ignore
+    constant_identifier_names: ignore
+    no_logic_in_create_state: ignore
+linter:
+  rules:
+    sort_pub_dependencies: false
+    omit_local_variable_types: false
+    library_private_types_in_public_api: false
+    file_names: true
+    unawaited_futures: false
+    depend_on_referenced_packages: false

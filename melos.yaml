@@ -1,0 +1,48 @@
+name: rebobinadorexpress
+
+packages:
+  - "pubspec.yaml"
+
+scripts:
+  get:
+    run: melos exec -- "fvm flutter pub get"
+    select-package:
+      flutter: true
+      file-exists: "pubspec.yaml"
+    packageFilters:
+      dependsOn: "packages/*"
+
+  clean:
+    run: melos exec -- "fvm flutter packages pub run build_runner clean"
+    packageFilters:
+      dependsOn: "packages/*"
+  gen:
+    run: melos exec -- "fvm flutter packages pub run build_runner build --delete-conflicting-outputs"
+    select-package:
+      flutter: true
+      file-exists: "pubspec.yaml"
+    packageFilters:
+      dependsOn: "packages/*"
+
+  generate:
+    run: melos exec -- "flutter packages pub run build_runner build --delete-conflicting-outputs"
+    select-package:
+      flutter: true
+      file-exists: "pubspec.yaml"
+    packageFilters:
+      dependsOn: "packages/*"
+  
+  gen_l10n:
+    run: melos exec -- "flutter gen-l10n"
+    select-package:
+      flutter: true
+      file-exists: "l10n.yaml"
+
+  l10n:
+    run: melos exec -- "fvm flutter gen-l10n"
+    select-package:
+      flutter: true
+      file-exists: "l10n.yaml"
+
+  flutter_clean:
+     run: melos exec -- "fvm flutter clean" && melos get
