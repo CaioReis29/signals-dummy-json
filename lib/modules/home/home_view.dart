@@ -1,6 +1,9 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:dummy_project/global/components/dm_button.dart';
 import 'package:dummy_project/global/injects.dart';
 import 'package:dummy_project/global/themes/app_colors.dart';
 import 'package:dummy_project/global/themes/app_text_theme.dart';
+import 'package:dummy_project/global/utils/format_double.dart';
 import 'package:dummy_project/modules/home/home_controller.dart';
 import 'package:dummy_project/modules/home/widgets/home_appbar.dart';
 import 'package:flutter/material.dart';
@@ -61,12 +64,7 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin{
                               children: [
                                 Text("Select Categories", style: AppTextStyle.robotoW700s20),
                                 IconButton(
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: AppColors.primary,
-                                    elevation: 4,
-                                    foregroundColor: AppColors.white,
-                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                                  ),
+                                  style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary, elevation: 4, foregroundColor: AppColors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5))),
                                   onPressed: (){}, 
                                   icon: Icon(Icons.filter_alt, color: AppColors.white, size: 40),
                                 ),
@@ -90,7 +88,9 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin{
                                 itemCount: products.length,
                                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                                   crossAxisCount: 2,
-                                  childAspectRatio: 0.7,
+                                  childAspectRatio: 0.68,
+                                  mainAxisSpacing: 5,
+                                  crossAxisSpacing: 6,
                                 ), 
                                 itemBuilder: (context, index) {
                                   final product = products[index];
@@ -101,7 +101,41 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin{
                                     elevation: 4,
                                     child: Column(
                                       children: [
-                                        Image.network(product.thumbnail)
+                                        const SizedBox(height: 10),
+                                        ClipRRect(
+                                          borderRadius: BorderRadius.circular(20),
+                                          child: CachedNetworkImage(
+                                            height: MediaQuery.sizeOf(context).height * 0.15,
+                                            width: MediaQuery.sizeOf(context).width * 0.4,
+                                            imageUrl: product.thumbnail,
+                                            fit: BoxFit.cover,
+                                            placeholder: (context, url) => const Center(child: CircularProgressIndicator()),
+                                            errorWidget: (context, url, error) => const Icon(Icons.error),
+                                          ),
+                                        ),
+                                        Container(
+                                          alignment: Alignment.centerLeft,
+                                          padding: const EdgeInsets.all(8),
+                                          child: Column(
+                                            children: [
+                                              SizedBox(
+                                                width: 200,
+                                                child: Text(product.title, style: AppTextStyle.robotoW700s16, textAlign: TextAlign.left, maxLines: 1, overflow: TextOverflow.ellipsis),
+                                              ),
+                                              SizedBox(
+                                                width: 200,
+                                                child: Text(product.brand, style: AppTextStyle.robotoW700s16.copyWith(color: Colors.grey), textAlign: TextAlign.left, maxLines: 1, overflow: TextOverflow.ellipsis),
+                                              ),
+                                              const SizedBox(height: 7),
+                                              SizedBox(
+                                                width: 200,
+                                                child: Text(FormatDouble.priceToCurrency(product.price), style: AppTextStyle.robotoW800s18, textAlign: TextAlign.left, maxLines: 1, overflow: TextOverflow.ellipsis),
+                                              ),
+                                              const SizedBox(height: 5),
+                                              DmButton(onTap: (){}, height: 30, content: "Buy", textStyle: AppTextStyle.robotoW800s16.copyWith(color: AppColors.white)),
+                                            ],
+                                          ),
+                                        ),
                                       ],
                                       ),
                                     ),
