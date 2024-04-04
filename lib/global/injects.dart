@@ -1,4 +1,5 @@
 import 'package:dummy_project/global/repositories/categories_repository/categories_repository_imp.dart';
+import 'package:dummy_project/global/repositories/products_by_category_repository.dart/products_by_category_imp.dart';
 import 'package:dummy_project/global/repositories/products_repository/products_repository_imp.dart';
 import 'package:dummy_project/global/services/auth_service/login_service_imp.dart';
 import 'package:dummy_project/modules/home/home_controller.dart';
@@ -17,8 +18,10 @@ Future<void> setupInjection() async {
 
   inject.registerLazySingleton<CategoriesRepositoryImp>(() => CategoriesRepositoryImp());
 
+  inject.registerLazySingleton<ProductsByCategoryImp>(() => ProductsByCategoryImp());
+
   inject.registerSingleton<LoginController>(LoginController(inject<LoginServiceImp>()));
 
-  inject.registerSingleton<HomeController>(HomeController(inject<ProductsRepositoryImp>(), inject<CategoriesRepositoryImp>()));
+  inject.registerSingleton<HomeController>(HomeController(inject<ProductsRepositoryImp>(), inject<CategoriesRepositoryImp>(), inject<ProductsByCategoryImp>()));
 
 }
