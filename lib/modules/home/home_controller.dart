@@ -23,7 +23,6 @@ class HomeController {
       products.value = AsyncData(data);
     } catch (e, s) {
       products.value = AsyncError(e, s);
-      rethrow;
     }
   }
 

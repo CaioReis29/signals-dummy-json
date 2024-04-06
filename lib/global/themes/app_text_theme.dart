@@ -58,5 +58,6 @@ class AppTextStyle {
   static final robotoW800s18 = TextStyle(fontSize: 18, fontFamily: roboto, fontWeight: FontWeight.w800, color: AppColors.black);
   static final robotoW800s20 = TextStyle(fontSize: 20, fontFamily: roboto, fontWeight: FontWeight.w800, color: AppColors.black);
   static final robotoW800s24 = TextStyle(fontSize: 24, fontFamily: roboto, fontWeight: FontWeight.w800, color: AppColors.black);
+  static final robotoW800s30 = TextStyle(fontSize: 30, fontFamily: roboto, fontWeight: FontWeight.w800, color: AppColors.black);
   static final robotoW800s45 = TextStyle(fontSize: 45, fontFamily: roboto, fontWeight: FontWeight.w800, color: AppColors.black);
 }

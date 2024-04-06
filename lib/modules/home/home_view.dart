@@ -2,11 +2,13 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dummy_project/global/components/dm_button.dart';
 import 'package:dummy_project/global/components/dm_shimmer.dart';
 import 'package:dummy_project/global/injects.dart';
+import 'package:dummy_project/global/routes/app_routes.dart';
 import 'package:dummy_project/global/themes/app_colors.dart';
 import 'package:dummy_project/global/themes/app_text_theme.dart';
 import 'package:dummy_project/global/utils/format_double.dart';
 import 'package:dummy_project/modules/home/home_controller.dart';
 import 'package:dummy_project/modules/home/widgets/categories_build.dart';
+import 'package:dummy_project/modules/home/widgets/home_error_state.dart';
 import 'package:dummy_project/modules/home/widgets/home_appbar.dart';
 import 'package:dummy_project/modules/home/widgets/loading_categories.dart';
 import 'package:flutter/material.dart';
@@ -50,7 +52,14 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin{
                   children: [
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 30),
-                      child: Text("Find your product on DummyJSON", style: AppTextStyle.robotoW800s45),
+                      child: 
+                      Text.rich(
+                        style: AppTextStyle.robotoW800s30,
+                        TextSpan(
+                          children: <TextSpan>[
+                            	const TextSpan(text: "Find your product on Dummy"),
+                            	TextSpan(text: "JSON", style: TextStyle(color: AppColors.primary)),
+                      ])),
                     ),
                     SizedBox(
                       height: 50,
@@ -59,7 +68,7 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin{
                           loading: () => const LoadingCategories(),
                           data: (categories) => CategoriesBuild(categories: categories, controller: controller),
                           orElse: () => Container(),
-                          error: (error) => Text(error.toString()),
+                          error: (error) => Container(),
                         ),
                       ),
                     ),
@@ -100,13 +109,16 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin{
                                           const SizedBox(height: 10),
                                           ClipRRect(
                                             borderRadius: BorderRadius.circular(20),
-                                            child: CachedNetworkImage(
-                                              height: MediaQuery.sizeOf(context).height * 0.15,
-                                              width: MediaQuery.sizeOf(context).width * 0.4,
-                                              imageUrl: product.thumbnail,
-                                              fit: BoxFit.cover,
-                                              placeholder: (context, url) => const Center(child: CircularProgressIndicator()),
-                                              errorWidget: (context, url, error) => const Icon(Icons.error),
+                                            child: Hero(
+                                              tag: product.thumbnail,
+                                              child: CachedNetworkImage(
+                                                height: MediaQuery.sizeOf(context).height * 0.15,
+                                                width: MediaQuery.sizeOf(context).width * 0.4,
+                                                imageUrl: product.thumbnail,
+                                                fit: BoxFit.cover,
+                                                placeholder: (context, url) => const Center(child: CircularProgressIndicator()),
+                                                errorWidget: (context, url, error) => const Icon(Icons.error),
+                                              ),
                                             ),
                                           ),
                                           Container(
@@ -128,7 +140,7 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin{
                                                   child: Text(FormatDouble.priceToCurrency(product.price), style: AppTextStyle.robotoW800s18, textAlign: TextAlign.left, maxLines: 1, overflow: TextOverflow.ellipsis),
                                                 ),
                                                 const SizedBox(height: 5),
-                                                DmButton(onTap: (){}, height: 30, content: "Buy", textStyle: AppTextStyle.robotoW800s16.copyWith(color: AppColors.white)),
+                                                DmButton(onTap: () => Navigator.pushNamed(context, AppRoutes.productDetails, arguments: product.id), height: 30, content: "Buy", textStyle: AppTextStyle.robotoW800s16.copyWith(color: AppColors.white)),
                                               ],
                                             ),
                                           ),
@@ -141,7 +153,11 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin{
                               ],
                             ),
                           ),
-                          error: () => const Center(child: Text("ERROR STATE")),
+                          error: () => HomeErrorState(
+                            onTap: () {
+                             controller.loadProducts();
+                             controller.loadCategories();
+                          }),
                         ),
                       ),
                     ),
