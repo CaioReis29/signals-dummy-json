@@ -1,16 +1,14 @@
 
+import 'package:dummy_project/global/datasource/remote_data_source/remote_data_source_impl.dart';
 import 'package:dummy_project/global/models/product/product.dart';
 import 'package:dummy_project/global/repositories/categories_repository/categories_repository_imp.dart';
-import 'package:dummy_project/global/repositories/products_by_category_repository.dart/products_by_category_imp.dart';
-import 'package:dummy_project/global/repositories/products_repository/products_repository_imp.dart';
 import 'package:signals/signals_flutter.dart';
 
 class HomeController {
-  ProductsRepositoryImp productRepo;
   CategoriesRepositoryImp categorieRepo;
-  ProductsByCategoryImp productsByCategoryRepo;
+  final RemoteDataSourceImpl _dataSourceImpl;
 
-  HomeController(this.productRepo, this.categorieRepo, this.productsByCategoryRepo);
+  HomeController(this.categorieRepo, this._dataSourceImpl);
 
   late final products = signal<AsyncState<List<Product>>>(AsyncData([]));
 
@@ -19,8 +17,11 @@ class HomeController {
   Future<void> loadProducts() async {
     products.value = AsyncLoading();
     try {
-      final List<Product> data = await productRepo.loadProducts();
-      products.value = AsyncData(data);
+      final response = await _dataSourceImpl.loadProducts();
+      final data = response.data!.products;
+
+      if(data != null) products.value = AsyncData(data);
+
     } catch (e, s) {
       products.value = AsyncError(e, s);
     }
@@ -39,8 +40,9 @@ class HomeController {
   Future<void> loadProductsByCategorie(String category) async {
     products.value = AsyncLoading();
     try {
-      final List<Product> result = await productsByCategoryRepo.listProductsByCategory(category);
-      products.value = AsyncData(result);
+      final result = await _dataSourceImpl.loadProductsByCategory(category);
+      final data = result.data!.products;
+      if(data != null) products.value = AsyncData(data);
     } catch (e, s) {
       products.value = AsyncError(e, s);
       rethrow;

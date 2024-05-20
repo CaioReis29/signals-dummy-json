@@ -5,6 +5,7 @@ import 'package:dummy_project/global/themes/app_text_theme.dart';
 import 'package:dummy_project/global/utils/format_double.dart';
 import 'package:dummy_project/modules/product_details/product_details_controller.dart';
 import 'package:dummy_project/modules/product_details/widgets/product_dialog.dart';
+import 'package:dummy_project/modules/product_details/widgets/product_loading_state.dart';
 import 'package:dummy_project/modules/product_details/widgets/product_tab_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:signals/signals_flutter.dart';
@@ -46,40 +47,42 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
               builder: (context) => productState.maybeMap(
                 data: (product) => Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        Hero(
-                          tag: product.thumbnail,
-                          child: CachedNetworkImage(
-                            placeholder: (context, url) => const Center(child: CircularProgressIndicator()),
-                            imageUrl: product.thumbnail,
-                            fit: BoxFit.fill,
-                            height: MediaQuery.sizeOf(context).height * 0.3,
+                  child: Column(
+                    children: [
+                      Hero(
+                        tag: product.thumbnail,
+                        child: CachedNetworkImage(
+                          placeholder: (context, url) => const Center(child: CircularProgressIndicator()),
+                          imageUrl: product.thumbnail,
+                          fit: BoxFit.fill,
+                          height: MediaQuery.sizeOf(context).height * 0.3,
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          SizedBox(
+                            width: MediaQuery.sizeOf(context).width * 0.5,
+                            child: Text(product.title, style: AppTextStyle.robotoW600s20, maxLines: 2),
                           ),
-                        ),
-                        const SizedBox(height: 20),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(product.title, style: AppTextStyle.robotoW600s20),
-                            Text(FormatDouble.priceToCurrency(product.price), style: AppTextStyle.robotoW800s20.copyWith(color: AppColors.primary)),
-                          ],
-                        ),
-                        const SizedBox(height: 20),
-                        Align(alignment: Alignment.centerLeft, child: Text("Images:", style: AppTextStyle.robotoW600s20)),
-                        ProductDialog(product: product),
-                        const SizedBox(height: 20),
-                        ProductTabBar(product: product),
-                      ],
-                    ),
+                          Text(FormatDouble.priceToCurrency(product.price), style: AppTextStyle.robotoW800s20.copyWith(color: AppColors.primary)),
+                        ],
+                      ),
+                      const SizedBox(height: 20),
+                      Align(alignment: Alignment.centerLeft, child: Text("Images:", style: AppTextStyle.robotoW600s20)),
+                      ProductDialog(product: product),
+                      const SizedBox(height: 20),
+                      ProductTabBar(product: product),
+                      const SizedBox(height: 20),
+                    ],
                   ),
                 ),
-                loading: () => const Center(child: CircularProgressIndicator()),
+                loading: () => const ProductLoadingState(),
                 error: (error, stackTcace) => Text(error.toString()),
                 orElse: () => Container(),
               ),
-          ),
+            ),
       );
    }
 }

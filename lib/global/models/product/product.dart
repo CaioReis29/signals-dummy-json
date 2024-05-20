@@ -19,9 +19,6 @@ class Product with _$Product {
     @JsonKey(name: 'category') @Default('') String category,
     @JsonKey(name: 'thumbnail') @Default('') String thumbnail,
     @JsonKey(name: 'images') @Default([]) List<String> images,
-    // @JsonKey(name: 'total') @Default(0) int total,
-    // @JsonKey(name: 'skip') @Default(0) int skip,
-    // @JsonKey(name: 'limit') @Default(0) int limit,
   }) = _Product;
   factory Product.fromJson(Map<String, dynamic> json) => _$ProductFromJson(json);
 }
